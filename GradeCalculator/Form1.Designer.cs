@@ -102,6 +102,7 @@
             this.lstViewAssignments.FullRowSelect = true;
             this.lstViewAssignments.GridLines = true;
             this.lstViewAssignments.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
+            this.lstViewAssignments.LabelEdit = true;
             this.lstViewAssignments.Location = new System.Drawing.Point(-1, 35);
             this.lstViewAssignments.MultiSelect = false;
             this.lstViewAssignments.Name = "lstViewAssignments";
@@ -109,7 +110,6 @@
             this.lstViewAssignments.TabIndex = 3;
             this.lstViewAssignments.UseCompatibleStateImageBehavior = false;
             this.lstViewAssignments.View = System.Windows.Forms.View.Details;
-            this.lstViewAssignments.AfterLabelEdit += new System.Windows.Forms.LabelEditEventHandler(this.lstViewAssignments_AfterLabelEdit);
             this.lstViewAssignments.DoubleClick += new System.EventHandler(this.lstViewAssignments_DoubleClick);
             // 
             // assignHeader
@@ -139,7 +139,7 @@
             this.txtWeight.Size = new System.Drawing.Size(44, 21);
             this.txtWeight.TabIndex = 1;
             this.txtWeight.Enter += new System.EventHandler(this.txtWeight_Enter);
-            this.txtWeight.Validated += new System.EventHandler(this.txtWeight_Validated);
+            this.txtWeight.Validating += new System.ComponentModel.CancelEventHandler(this.txtWeight_Validating);
             // 
             // lblSection
             // 
@@ -153,11 +153,12 @@
             // 
             // txtEdit
             // 
-            this.txtEdit.Location = new System.Drawing.Point(630, 90);
+            this.txtEdit.Location = new System.Drawing.Point(267, 569);
             this.txtEdit.Name = "txtEdit";
             this.txtEdit.Size = new System.Drawing.Size(100, 20);
             this.txtEdit.TabIndex = 3;
-            this.txtEdit.Visible = false;
+            this.txtEdit.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtEdit_KeyDown);
+            this.txtEdit.Validating += new System.ComponentModel.CancelEventHandler(this.txtEdit_Validating);
             // 
             // btnAddSection
             // 

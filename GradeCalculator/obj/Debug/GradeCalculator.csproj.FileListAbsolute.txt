@@ -7,3 +7,4 @@ F:\Repositories\C#\GradeCalculator\GradeCalculator\obj\Debug\GradeCalculator.Pro
 F:\Repositories\C#\GradeCalculator\GradeCalculator\obj\Debug\GradeCalculator.csproj.GenerateResource.Cache
 F:\Repositories\C#\GradeCalculator\GradeCalculator\obj\Debug\GradeCalculator.exe
 F:\Repositories\C#\GradeCalculator\GradeCalculator\obj\Debug\GradeCalculator.pdb
+F:\Repositories\C#\GradeCalculator\GradeCalculator\bin\Debug\System.Data.SQLite.pdb
