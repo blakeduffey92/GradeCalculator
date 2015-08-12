@@ -29,22 +29,22 @@
         private void InitializeComponent()
         {
             this.label1 = new System.Windows.Forms.Label();
-            this.lstViewSections = new System.Windows.Forms.ListView();
-            this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.pnlAssignments = new System.Windows.Forms.Panel();
-            this.lstViewAssignments = new System.Windows.Forms.ListView();
-            this.assignHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.gradeHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.dgvAssignments = new System.Windows.Forms.DataGridView();
             this.lblPercent = new System.Windows.Forms.Label();
             this.txtWeight = new System.Windows.Forms.TextBox();
             this.lblSection = new System.Windows.Forms.Label();
-            this.txtEdit = new System.Windows.Forms.TextBox();
             this.btnAddSection = new System.Windows.Forms.Button();
             this.btnAddAssignment = new System.Windows.Forms.Button();
             this.btnDeleteSection = new System.Windows.Forms.Button();
             this.btnDeleteAssignment = new System.Windows.Forms.Button();
             this.lblAverage = new System.Windows.Forms.Label();
+            this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.lstViewSections = new System.Windows.Forms.ListView();
+            this.dgColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dgColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.pnlAssignments.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvAssignments)).BeginInit();
             this.SuspendLayout();
             // 
             // label1
@@ -57,33 +57,11 @@
             this.label1.TabIndex = 0;
             this.label1.Text = "Grade Calculator";
             // 
-            // lstViewSections
-            // 
-            this.lstViewSections.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.lstViewSections.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.columnHeader1});
-            this.lstViewSections.Font = new System.Drawing.Font("Calibri", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lstViewSections.FullRowSelect = true;
-            this.lstViewSections.GridLines = true;
-            this.lstViewSections.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
-            this.lstViewSections.Location = new System.Drawing.Point(133, 153);
-            this.lstViewSections.MultiSelect = false;
-            this.lstViewSections.Name = "lstViewSections";
-            this.lstViewSections.Size = new System.Drawing.Size(128, 184);
-            this.lstViewSections.TabIndex = 0;
-            this.lstViewSections.UseCompatibleStateImageBehavior = false;
-            this.lstViewSections.View = System.Windows.Forms.View.Details;
-            this.lstViewSections.ItemSelectionChanged += new System.Windows.Forms.ListViewItemSelectionChangedEventHandler(this.lstViewSections_ItemSelectionChanged);
-            // 
-            // columnHeader1
-            // 
-            this.columnHeader1.Width = 124;
-            // 
             // pnlAssignments
             // 
             this.pnlAssignments.BackColor = System.Drawing.SystemColors.Control;
             this.pnlAssignments.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pnlAssignments.Controls.Add(this.lstViewAssignments);
+            this.pnlAssignments.Controls.Add(this.dgvAssignments);
             this.pnlAssignments.Controls.Add(this.lblPercent);
             this.pnlAssignments.Controls.Add(this.txtWeight);
             this.pnlAssignments.Controls.Add(this.lblSection);
@@ -92,34 +70,25 @@
             this.pnlAssignments.Size = new System.Drawing.Size(420, 357);
             this.pnlAssignments.TabIndex = 2;
             // 
-            // lstViewAssignments
+            // dgvAssignments
             // 
-            this.lstViewAssignments.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.lstViewAssignments.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.assignHeader,
-            this.gradeHeader});
-            this.lstViewAssignments.Font = new System.Drawing.Font("Calibri", 12F, System.Drawing.FontStyle.Bold);
-            this.lstViewAssignments.FullRowSelect = true;
-            this.lstViewAssignments.GridLines = true;
-            this.lstViewAssignments.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
-            this.lstViewAssignments.LabelEdit = true;
-            this.lstViewAssignments.Location = new System.Drawing.Point(-1, 35);
-            this.lstViewAssignments.MultiSelect = false;
-            this.lstViewAssignments.Name = "lstViewAssignments";
-            this.lstViewAssignments.Size = new System.Drawing.Size(420, 321);
-            this.lstViewAssignments.TabIndex = 3;
-            this.lstViewAssignments.UseCompatibleStateImageBehavior = false;
-            this.lstViewAssignments.View = System.Windows.Forms.View.Details;
-            this.lstViewAssignments.DoubleClick += new System.EventHandler(this.lstViewAssignments_DoubleClick);
-            // 
-            // assignHeader
-            // 
-            this.assignHeader.Text = "assignHeader";
-            this.assignHeader.Width = 350;
-            // 
-            // gradeHeader
-            // 
-            this.gradeHeader.Text = "gradeHeader";
+            this.dgvAssignments.AllowUserToAddRows = false;
+            this.dgvAssignments.AllowUserToDeleteRows = false;
+            this.dgvAssignments.AllowUserToResizeColumns = false;
+            this.dgvAssignments.AllowUserToResizeRows = false;
+            this.dgvAssignments.BackgroundColor = System.Drawing.SystemColors.Window;
+            this.dgvAssignments.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvAssignments.ColumnHeadersVisible = false;
+            this.dgvAssignments.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.dgColumn1,
+            this.dgColumn2});
+            this.dgvAssignments.Location = new System.Drawing.Point(-1, 35);
+            this.dgvAssignments.MultiSelect = false;
+            this.dgvAssignments.Name = "dgvAssignments";
+            this.dgvAssignments.RowHeadersVisible = false;
+            this.dgvAssignments.Size = new System.Drawing.Size(420, 321);
+            this.dgvAssignments.TabIndex = 9;
+            this.dgvAssignments.CellValidating += new System.Windows.Forms.DataGridViewCellValidatingEventHandler(this.dgvAssignments_CellValidating);
             // 
             // lblPercent
             // 
@@ -150,15 +119,6 @@
             this.lblSection.Size = new System.Drawing.Size(68, 23);
             this.lblSection.TabIndex = 0;
             this.lblSection.Text = "Section";
-            // 
-            // txtEdit
-            // 
-            this.txtEdit.Location = new System.Drawing.Point(267, 569);
-            this.txtEdit.Name = "txtEdit";
-            this.txtEdit.Size = new System.Drawing.Size(100, 20);
-            this.txtEdit.TabIndex = 3;
-            this.txtEdit.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtEdit_KeyDown);
-            this.txtEdit.Validating += new System.ComponentModel.CancelEventHandler(this.txtEdit_Validating);
             // 
             // btnAddSection
             // 
@@ -203,11 +163,45 @@
             // lblAverage
             // 
             this.lblAverage.AutoSize = true;
-            this.lblAverage.Location = new System.Drawing.Point(13, 496);
+            this.lblAverage.Location = new System.Drawing.Point(12, 554);
             this.lblAverage.Name = "lblAverage";
             this.lblAverage.Size = new System.Drawing.Size(35, 13);
             this.lblAverage.TabIndex = 8;
             this.lblAverage.Text = "label2";
+            // 
+            // columnHeader1
+            // 
+            this.columnHeader1.Width = 124;
+            // 
+            // lstViewSections
+            // 
+            this.lstViewSections.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.lstViewSections.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.columnHeader1});
+            this.lstViewSections.Font = new System.Drawing.Font("Calibri", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lstViewSections.FullRowSelect = true;
+            this.lstViewSections.GridLines = true;
+            this.lstViewSections.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
+            this.lstViewSections.Location = new System.Drawing.Point(133, 153);
+            this.lstViewSections.MultiSelect = false;
+            this.lstViewSections.Name = "lstViewSections";
+            this.lstViewSections.Size = new System.Drawing.Size(128, 184);
+            this.lstViewSections.TabIndex = 0;
+            this.lstViewSections.UseCompatibleStateImageBehavior = false;
+            this.lstViewSections.View = System.Windows.Forms.View.Details;
+            this.lstViewSections.ItemSelectionChanged += new System.Windows.Forms.ListViewItemSelectionChangedEventHandler(this.lstViewSections_ItemSelectionChanged);
+            // 
+            // dgColumn1
+            // 
+            this.dgColumn1.HeaderText = "Column0";
+            this.dgColumn1.Name = "dgColumn1";
+            this.dgColumn1.Width = 380;
+            // 
+            // dgColumn2
+            // 
+            this.dgColumn2.HeaderText = "Column1";
+            this.dgColumn2.Name = "dgColumn2";
+            this.dgColumn2.Width = 37;
             // 
             // Form1
             // 
@@ -219,7 +213,6 @@
             this.Controls.Add(this.btnDeleteSection);
             this.Controls.Add(this.btnAddAssignment);
             this.Controls.Add(this.btnAddSection);
-            this.Controls.Add(this.txtEdit);
             this.Controls.Add(this.lstViewSections);
             this.Controls.Add(this.pnlAssignments);
             this.Controls.Add(this.label1);
@@ -228,6 +221,7 @@
             this.Shown += new System.EventHandler(this.Form1_Shown);
             this.pnlAssignments.ResumeLayout(false);
             this.pnlAssignments.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvAssignments)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -236,21 +230,20 @@
         #endregion
 
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.ListView lstViewSections;
         private System.Windows.Forms.Panel pnlAssignments;
         private System.Windows.Forms.Label lblPercent;
         private System.Windows.Forms.TextBox txtWeight;
         private System.Windows.Forms.Label lblSection;
-        private System.Windows.Forms.ListView lstViewAssignments;
-        private System.Windows.Forms.ColumnHeader assignHeader;
-        private System.Windows.Forms.ColumnHeader gradeHeader;
-        private System.Windows.Forms.ColumnHeader columnHeader1;
-        private System.Windows.Forms.TextBox txtEdit;
         private System.Windows.Forms.Button btnAddSection;
         private System.Windows.Forms.Button btnAddAssignment;
         private System.Windows.Forms.Button btnDeleteSection;
         private System.Windows.Forms.Button btnDeleteAssignment;
         private System.Windows.Forms.Label lblAverage;
+        private System.Windows.Forms.DataGridView dgvAssignments;
+        private System.Windows.Forms.ColumnHeader columnHeader1;
+        private System.Windows.Forms.ListView lstViewSections;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dgColumn1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dgColumn2;
     }
 }
 

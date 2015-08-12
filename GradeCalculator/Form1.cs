@@ -14,8 +14,7 @@ namespace GradeCalculator
     {
         DBConnect dbcon = new DBConnect();
         string initVal; //initial value of txtWeight on enter
-        int selectedIndex;
-        int columnIndex;
+
 
         public Form1()
         {
@@ -24,10 +23,17 @@ namespace GradeCalculator
 
         private void Form1_Shown(object sender, EventArgs e)
         {
-            populateSections();                        //populate sections
-            lstViewSections.Items[0].Selected = true;  //select first section
-            Calculate();                               //initialize calculation
-            
+            try
+            {
+                populateSections();                        //populate sections
+                lstViewSections.Items[0].Selected = true;  //select first section
+                Calculate();                               //initialize grade average calculation
+            }
+            catch (System.ArgumentOutOfRangeException eArgs) 
+            {
+                //catch exception if no sections exist
+            }
+          
         }
 
         private void lstViewSections_ItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
@@ -36,35 +42,6 @@ namespace GradeCalculator
             {
                 populateAssignments(); 
             }
-        }
-
-        private void lstViewAssignments_DoubleClick(object sender, EventArgs e)
-        {
-            //
-            //  TODO FIX LOCATION OF TEXTBOX
-            //get index of clicked column
-            Point mousePos = lstViewAssignments.PointToClient(Control.MousePosition);
-            ListViewHitTestInfo hitTest = lstViewAssignments.HitTest(mousePos);
-            selectedIndex = lstViewAssignments.Items.IndexOf(hitTest.Item);
-            columnIndex = hitTest.Item.SubItems.IndexOf(hitTest.SubItem);
-            Rectangle rect = lstViewAssignments.Items[lstViewAssignments.SelectedIndices[0]].SubItems[columnIndex].Bounds;
-            int itemLeft = lstViewAssignments.GetItemRect(lstViewAssignments.SelectedIndices[0]).Left;
-            int itemBottom = lstViewAssignments.GetItemRect(lstViewAssignments.SelectedIndices[0]).Bottom;
-            
-
-            //set txtEdit's location and size to the same as the clicked item
-            //txtEdit.Bounds = new Rectangle(this.PointToScreen(new Point(rect.Left, rect.Bottom)), new Size(rect.Width, rect.Height));
-            //txtEdit.Location = 
-            //txtEdit.BringToFront();
-
-            //lstViewAssignments.SelectedItems[0].BeginEdit();
-            txtEdit.Visible = true;
-            txtEdit.Text = hitTest.Item.SubItems[columnIndex].Text;
-            txtEdit.Focus();
-            txtEdit.Select(txtEdit.Text.Length, 0);
-
-            
-            
         }
         
         private void btnAddSection_Click(object sender, EventArgs e)
@@ -81,16 +58,14 @@ namespace GradeCalculator
 
         private void btnAddAssignment_Click(object sender, EventArgs e)
         {
-            string assignName = "Assignment " + (lstViewAssignments.Items.Count + 1);
+            string assignName = "Assignment " + (dgvAssignments.Rows.Count + 1);
             string assignGrade = "100";
             string section = lstViewSections.SelectedItems[0].Text;
-            string[] row = { assignName, assignGrade };
             string query = "INSERT INTO tblAssignment ('A_Name', 'A_Grade', 'A_Section') VALUES('" + assignName + "', '" + assignGrade + "', '" + section + "')";
 
             dbcon.QueryDB(query);
 
-            ListViewItem lvItem = new ListViewItem(row);
-            lstViewAssignments.Items.Add(lvItem);
+            dgvAssignments.Rows.Add(assignName, assignGrade);
         }
 
         private void btnDeleteSection_Click(object sender, EventArgs e)
@@ -108,43 +83,61 @@ namespace GradeCalculator
 
         private void btnDeleteAssignment_Click(object sender, EventArgs e)
         {
-            string assignName = lstViewAssignments.SelectedItems[0].Text;
+            string assignName = dgvAssignments.CurrentRow.Cells[0].Value.ToString();
             string section = lstViewSections.SelectedItems[0].Text;
 
             string query = "DELETE FROM tblAssignment " +
                            "WHERE A_Name='" + assignName + "' AND A_Section='" + section + "'";
             dbcon.QueryDB(query);
-            lstViewAssignments.SelectedItems[0].Remove();
+            dgvAssignments.Rows.RemoveAt(dgvAssignments.CurrentRow.Index);
+        }
+
+        private void dgvAssignments_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
+        {
+            string oldValue = dgvAssignments[e.ColumnIndex, e.RowIndex].Value.ToString(); //cell value before change
+            string newValue = e.FormattedValue.ToString(); //cell value after change
+            string assignName;  //assignment name for query
+            string assignGrade; //assignment grade for query
+            string section = lstViewSections.SelectedItems[0].Text; // section name for query
+            string whereName = dgvAssignments[0, e.RowIndex].Value.ToString(); //WHERE value in query
+            
+
+            if (newValue != oldValue)
+            {
+                if (!string.IsNullOrEmpty(newValue.ToString()))
+                {
+                    if (dgvAssignments.CurrentCell.ColumnIndex == 0) //set assignName to newValue and assignGrade to it's cell value if name cell being edited
+                    {
+                        assignName = newValue;
+                        assignGrade = dgvAssignments[1, e.RowIndex].Value.ToString();
+
+                    }
+                    else   //set assignGrade to newValue and assignName to it's cell value if grade cell being edited
+                    {
+                        assignName = dgvAssignments[0, e.RowIndex].Value.ToString();
+                        assignGrade = newValue;
+                    }
+
+                    string query = "UPDATE tblAssignment " +
+                                   "SET A_Name='" + assignName + "', A_Grade='" + assignGrade + "', A_Section='" + section + "' " +
+                                   "WHERE A_Name='" + whereName + "' " +
+                                   "AND A_Section='" + section + "'";
+
+                    dbcon.QueryDB(query);
+                    Calculate();
+                }
+                else
+                {
+                    MessageBox.Show("Cell cannot be null.");
+                    e.Cancel = true;
+                }
+            }
+            
         }
 
         private void txtWeight_Enter(object sender, EventArgs e)
         {
             initVal = txtWeight.Text;
-        }
-
-        private void txtEdit_Validating(object sender, CancelEventArgs e)
-        {
-            lstViewAssignments.Items[selectedIndex].Selected = true;
-
-            if (lstViewAssignments.Items[selectedIndex].SubItems[columnIndex].Text != txtEdit.Text)
-            {
-                string whereName = lstViewAssignments.Items[selectedIndex].SubItems[0].Text; //set whereName to label value before its changed
-
-                lstViewAssignments.Items[selectedIndex].SubItems[columnIndex].Text = txtEdit.Text; //change labels
-
-                string column0Text = lstViewAssignments.Items[selectedIndex].SubItems[0].Text;
-                string column1Text = lstViewAssignments.Items[selectedIndex].SubItems[1].Text;
-                string section = lstViewSections.SelectedItems[0].Text;
-                string query = "UPDATE tblAssignment " +
-                               "SET A_Name='" + column0Text + "', A_Grade='" + column1Text + "', A_Section='" + section + "' " +
-                               "WHERE A_Name='" + whereName + "' " +
-                               "AND A_Section='" + section + "'";
-
-                dbcon.QueryDB(query);
-                txtEdit.Text = "";
-                
-            }
-            txtEdit.Visible = false;
         }
 
         private void txtWeight_Validating(object sender, CancelEventArgs e)
@@ -182,19 +175,16 @@ namespace GradeCalculator
 
             txtWeight.Text = dbcon.Select(query);
 
-            lstViewAssignments.Items.Clear(); //clear any previous listview items before populating listview
+            dgvAssignments.Rows.Clear(); //clear any previous listview items before populating listview
 
             lblSection.Text = section;
 
             for (int i = 0; i < list.Count; i++)
             {
+                dgvAssignments.Rows.Add(list[i].assignName, list[i].assignGrade);
 
-                string[] row = { list[i].assignName, list[i].assignGrade.ToString() };
-                ListViewItem lvItem = new ListViewItem(row);
-                lstViewAssignments.Items.Add(lvItem);
-
-                lstViewAssignments.Columns[0].Width = 370;
-                lstViewAssignments.Columns[1].Width = 40;
+                //lstViewAssignments.Columns[0].Width = 370;
+                //lstViewAssignments.Columns[1].Width = 40;
             }
 
         }
@@ -221,23 +211,13 @@ namespace GradeCalculator
                     list.Add(Convert.ToDouble(dbcon.Select(queryGradeAvg)) * Convert.ToDouble(dbcon.Select(queryWeight)) / 100); //Add avg of A_Grade * ( section weight / 100)
                 }
 
-                lblAverage.Text = list.Sum().ToString(); //get average from the sum of all list elements(section scores)
+                lblAverage.Text = "Grade Average: " + list.Sum().ToString(); //get average from the sum of all list elements(section scores)
             }
             else
             {
-                lblAverage.Text = "The sum of all section weights must equal 100.";
+                lblAverage.Text = "Grade Average: The sum of all section weights must equal 100.";
             }
         }
-
-        private void txtEdit_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyData == Keys.Enter)
-            {
-                e.SuppressKeyPress = true;
-                txtEdit.Visible = false;
-            }
-        }
-
     }
 
     public struct Assignment
